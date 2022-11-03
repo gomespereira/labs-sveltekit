@@ -1,20 +1,19 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
   import { supabaseClient } from '$lib/supabaseClient'
 
   let loading: boolean = false
   let email: string
-  let password: string
 
-  async function handleSignIn() {
+  async function handleResetPassword() {
     try {
       loading = true
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://labs-sveltekit.vercel.app/change'
+      })
 
       if (error) throw error
 
-      alert('Signed in successful!')
-      goto('/dashboard')
+      alert('If your email address exists in our database, you will receive a password recovery link in a few minutes.')
     } catch (error) {
       if (error instanceof Error) alert(error.message)
     } finally {
@@ -24,8 +23,8 @@
 </script>
 
 <svelte:head>
-  <title>Sign In - Sveltekit Labs</title>
-  <meta name="description" content="Sveltekit Labs sign in page">
+  <title>Reset your password - Sveltekit Labs</title>
+  <meta name="description" content="Sveltekit Labs password reset page">
 </svelte:head>
 
 <div class="flex min-h-screen">
@@ -38,17 +37,18 @@
           alt="Company logo"
           loading="eager"
         >
-        <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in</h2>
+        <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Reset your password</h2>
         <p class="mt-2 text-sm text-gray-600">
-          New here?
-          <a href="/signup" class="font-medium text-indigo-600 hover:text-indigo-500">Sign up for an account</a>.
+          Remembered? Try to
+          <a href="/signin" class="font-medium text-indigo-600 hover:text-indigo-500">sign in</a>
+          again.
         </p>
       </div>
 
       <div class="mt-8">
         <div class="mt-6">
           <form
-            on:submit|preventDefault={handleSignIn}
+            on:submit|preventDefault={handleResetPassword}
             class="space-y-6"
           >
             <div>
@@ -60,33 +60,14 @@
                   id="email"
                   name="email"
                   type="email"
-                  autocomplete="email"
+                  autocomplete="off"
                   required
                 >
               </div>
-            </div>
-
-            <div class="space-y-1">
-              <label class="block text-sm font-medium text-gray-700" for="password">Password</label>
-              <div class="mt-1">
-                <input
-                  bind:value={password}
-                  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  id="password"
-                  name="password"
-                  type="password"
-                  autocomplete="current-password"
-                  required
-                >
-              </div>
-            </div>
-
-            <div class="text-sm">
-              <a class="font-medium text-indigo-600 hover:text-indigo-500" href="/reset">Forgot your password?</a>
             </div>
 
             <div>
-              <button class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit">Sign in</button>
+              <button class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit">Reset password</button>
             </div>
           </form>
         </div>

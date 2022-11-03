@@ -10,7 +10,7 @@
 
     if (error) throw error
 
-    alert('Sign out successful!')
+    alert('Signed out successful!')
     goto('/signin')
   }
 </script>

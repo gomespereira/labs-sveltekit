@@ -3,18 +3,20 @@
   import { supabaseClient } from '$lib/supabaseClient'
 
   let loading: boolean = false
-  let email: string
-  let password: string
+  let newPassword: string
+  let confirmNewPassword: string
 
-  async function handleSignIn() {
+  async function handleUpdateUser() {
     try {
       loading = true
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
+      const { error } = await supabaseClient.auth.updateUser({
+        password: newPassword
+      })
 
       if (error) throw error
 
-      alert('Signed in successful!')
-      goto('/dashboard')
+      alert('Password changed successfully.')
+      goto('/signin')
     } catch (error) {
       if (error instanceof Error) alert(error.message)
     } finally {
@@ -24,8 +26,8 @@
 </script>
 
 <svelte:head>
-  <title>Sign In - Sveltekit Labs</title>
-  <meta name="description" content="Sveltekit Labs sign in page">
+  <title>Change your password - Sveltekit Labs</title>
+  <meta name="description" content="Sveltekit Labs change password page">
 </svelte:head>
 
 <div class="flex min-h-screen">
@@ -38,55 +40,50 @@
           alt="Company logo"
           loading="eager"
         >
-        <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in</h2>
+        <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Change your password</h2>
         <p class="mt-2 text-sm text-gray-600">
-          New here?
-          <a href="/signup" class="font-medium text-indigo-600 hover:text-indigo-500">Sign up for an account</a>.
+          Don't worry, that happens.
         </p>
       </div>
 
       <div class="mt-8">
         <div class="mt-6">
           <form
-            on:submit|preventDefault={handleSignIn}
+            on:submit|preventDefault={handleUpdateUser}
             class="space-y-6"
           >
             <div>
-              <label class="block text-sm font-medium text-gray-700" for="email">Email address</label>
+              <label class="block text-sm font-medium text-gray-700" for="new-password">New password</label>
               <div class="mt-1">
                 <input
-                  bind:value={email}
+                  bind:value={newPassword}
                   class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  id="email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
+                  id="new-password"
+                  name="new-password"
+                  type="password"
+                  autocomplete="off"
                   required
                 >
               </div>
             </div>
 
             <div class="space-y-1">
-              <label class="block text-sm font-medium text-gray-700" for="password">Password</label>
+              <label class="block text-sm font-medium text-gray-700" for="confirm-new-password">Confirm new password</label>
               <div class="mt-1">
                 <input
-                  bind:value={password}
+                  bind:value={confirmNewPassword}
                   class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  id="password"
-                  name="password"
+                  id="confirm-new-password"
+                  name="confirm-new-password"
                   type="password"
-                  autocomplete="current-password"
+                  autocomplete="off"
                   required
                 >
               </div>
             </div>
 
-            <div class="text-sm">
-              <a class="font-medium text-indigo-600 hover:text-indigo-500" href="/reset">Forgot your password?</a>
-            </div>
-
             <div>
-              <button class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit">Sign in</button>
+              <button class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit">Change password</button>
             </div>
           </form>
         </div>
